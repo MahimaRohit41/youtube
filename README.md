@@ -68,3 +68,17 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+# Debouncing
+
+API call on every key press - this is not the case
+With debouncing
+
+Implemeted that if difference between 2 key press is > 200 ms then only make the API call
+
+Cache data using Redux : 
+If already search that word don't make an API call instead use cache data
+
+Cache : 
+Time complexity to search in Array : O(n)
+Time complexity to search in map (In Js Object) : O(1) 
