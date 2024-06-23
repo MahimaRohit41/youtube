@@ -1,8 +1,9 @@
 import React, { Component, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { toggleMenu } from '../utils/appSlice';
 import { YOUTUBE_SEARCH_API } from '../utils/constant';
 import { isPending, miniSerializeError } from '@reduxjs/toolkit';
+import { cacheResults } from '../utils/searchSlice';
 
 const Head = () => {
   const [searchQuery,setSearchQuery] = useState("");
@@ -10,15 +11,17 @@ const Head = () => {
   const [showSuggestions,setShowSuggestions] = useState(false);
   const dispatch = useDispatch();
 
-  useEffect(() =>{
-    //API call
-    console.log(searchQuery);
+  const searchCache = useSelector((store) => store.search);
 
+  useEffect(() =>{
     //Make API call after every key press
     //but if difference between 2 API call <200 ms decline the API call
     //Debouncing
     const timer = setTimeout( ()=> {
-      getSearchSuggestion()
+      if(searchCache[searchQuery])
+        setSuggestions(searchCache[searchQuery]);
+      else
+        getSearchSuggestion()
     }, 200);
 
     return () => {
@@ -43,6 +46,10 @@ const Head = () => {
     const json = await data.json();
     setSuggestions(json[1]);
     console.log(json[1]);
+
+    dispatch(cacheResults({
+      [searchQuery]: json[1]
+    }));
   }
 
   const handleToggleButtonClick = () => {
